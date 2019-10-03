@@ -11,7 +11,7 @@ Karhunen J., Oja E. (2001). Independent Component Analysis, Wiley. Or at the
 website http://www.cis.hut.fi/aapo/papers/IJCNN99_tutorialweb/
 
 The Python code here was translated into NumPy from the original Matlab Version
-1.8 (May 2005) by Gabriel Beckers, http://gbeckers.nl . In the 1.9 version, 
-two corrections were made by David Rivest-Hénault to make the code become 
-equivalent at machine precision to that of jadeR.m, after which I put the
-code on Github.
+1.8 of May 2005 by Gabriel Beckers, http://gbeckers.nl . After that, two 
+corrections were made by David Rivest-Hénault to make the code become 
+equivalent at machine precision to that of jadeR.m, after which I put the code 
+on Github.

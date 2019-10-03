@@ -51,7 +51,7 @@ from numpy import abs, append, arange, arctan2, argsort, array, concatenate, \
     savetxt, sign, sin, sqrt, zeros
 from numpy.linalg import eig, pinv
 
-__version__ = 1.9
+__version__ = 1.8
 
 
 def jadeR(X, m=None, verbose=False):
@@ -64,9 +64,9 @@ def jadeR(X, m=None, verbose=False):
     independent component analysis. Neural Computation, 11(1): 157-192.
     
     Translated into Numpy from the original Matlab Version 1.8 (May 2005) by
-    Gabriel Beckers, http://gbeckers.nl . In the 1.9 version, two corrections 
-    were made by David Rivest-Hénault to make the code become equivalent at 
-    machine precision to that of jadeR.m  
+    Gabriel Beckers, http://gbeckers.nl . After that, two corrections were made
+    by David Rivest-Hénault to make the code become equivalent at machine
+    precision to that of jadeR.m
 
     Parameters:
 
