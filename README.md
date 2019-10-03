@@ -1,5 +1,5 @@
 # jadeR for Python
-##Blind source separation of real signals
+## Blind source separation of real signals
 
 jadeR implements JADE, an Independent Component Analysis (ICA) algorithm
 developed by Jean-Francois Cardoso. More information about JADE can be
