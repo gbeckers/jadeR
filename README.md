@@ -4,8 +4,7 @@
 jadeR implements JADE, an Independent Component Analysis (ICA) algorithm
 developed by Jean-Francois Cardoso. More information about JADE can be
 found among others in: Cardoso, J. (1999) High-order contrasts for
-independent component analysis. Neural Computation, 11(1): 157-192. Or
-look at the website: http://www.tsi.enst.fr/~cardoso/guidesepsou.html
+independent component analysis. Neural Computation, 11(1): 157-192.
 
 More information about ICA can be found among others in Hyvarinen A.,
 Karhunen J., Oja E. (2001). Independent Component Analysis, Wiley. Or at the
