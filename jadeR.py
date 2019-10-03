@@ -41,31 +41,30 @@ in the future.
 
 jadeR requires NumPy.
 """
+from __future__ import print_function
 
-import sys, os
+import sys
+import os
 import getopt
 from numpy import abs, append, arange, arctan2, argsort, array, concatenate, \
-    cos, diag, dot, eye, float32, float64, loadtxt, matrix, multiply, ndarray, \
-    newaxis, savetxt, sign, sin, sqrt, zeros
+    cos, diag, dot, eye, float64, loadtxt, matrix, multiply, ndarray, \
+    savetxt, sign, sin, sqrt, zeros
 from numpy.linalg import eig, pinv
 
-__version__ = 1.0
+__version__ = 1.9
+
 
 def jadeR(X, m=None, verbose=False):
     """
     Blind separation of real signals with JADE.
 
-    jadeR implements JADE, an Independent Component Analysis (ICA) algorithm
-    developed by Jean-Francois Cardoso. More information about JADE can be
-    found among others in: Cardoso, J. (1999) High-order contrasts for
+    This function implements JADE, an Independent Component Analysis (ICA)
+    algorithm developed by Jean-Francois Cardoso. More information about JADE
+    can be found among others in: Cardoso, J. (1999) High-order contrasts for
     independent component analysis. Neural Computation, 11(1): 157-192. Or
     look at the website: http://www.tsi.enst.fr/~cardoso/guidesepsou.html
     
-    More information about ICA can be found among others in Hyvarinen A.,
-    Karhunen J., Oja E. (2001). Independent Component Analysis, Wiley. Or at the
-    website http://www.cis.hut.fi/aapo/papers/IJCNN99_tutorialweb/
-
-    Translated into NumPy from the original Matlab Version 1.8 (May 2005) by
+    Translated into Numpy from the original Matlab Version 1.8 (May 2005) by
     Gabriel Beckers, http://gbeckers.nl . In the 1.9 version, two corrections 
     were made by David Rivest-Hénault to make the code become equivalent at 
     machine precision to that of jadeR.m  
@@ -146,15 +145,15 @@ def jadeR(X, m=None, verbose=False):
         "number of sources (%d) is larger than number of sensors (%d )" % (m,n)
 
     if verbose:
-        print "jade -> Looking for %d sources" % m
-        print "jade -> Removing the mean value"
+        print("jade -> Looking for %d sources" % m)
+        print("jade -> Removing the mean value")
     X -= X.mean(1)
 
 
     # whitening & projection onto signal subspace
     # ===========================================
 
-    if verbose: print "jade -> Whitening the data"
+    if verbose: print("jade -> Whitening the data")
     # An eigen basis for the sample covariance matrix
     [D,U] = eig((X * X.T) / float(T))
     # Sort by increasing variances
@@ -196,7 +195,7 @@ def jadeR(X, m=None, verbose=False):
     # Estimation of the cumulant matrices
     # ===================================
 
-    if verbose: print "jade -> Estimating cumulant matrices"
+    if verbose: print("jade -> Estimating cumulant matrices")
 
     # Reshaping of the data, hoping to speed up things a little bit...
     X = X.T
@@ -272,11 +271,11 @@ def jadeR(X, m=None, verbose=False):
 
     # Joint diagonalization proper
     # ============================
-    if verbose: print "jade -> Contrast optimization by joint diagonalization"
+    if verbose: print("jade -> Contrast optimization by joint diagonalization")
 
     while encore:
         encore = False
-        if verbose: print "jade -> Sweep #%3d" % sweep ,
+        if verbose: print("jade -> Sweep #%3d" % sweep)
         sweep = sweep + 1
         upds  = 0
         Vkeep = V
@@ -311,10 +310,10 @@ def jadeR(X, m=None, verbose=False):
                     On = On + Gain
                     Off = Off - Gain
 
-        if verbose: print "completed in %d rotations" % upds
+        if verbose: print("completed in %d rotations" % upds)
         updates = updates + upds
     
-    if verbose: print "jade -> Total of %d Givens rotations" % updates
+    if verbose: print("jade -> Total of %d Givens rotations" % updates)
 
     # A separating matrix
     # ===================
@@ -325,7 +324,7 @@ def jadeR(X, m=None, verbose=False):
     # Therefore, the sort is according to the norm of the columns of
     # A = pinv(B)
 
-    if verbose: print "jade -> Sorting the components"
+    if verbose: print("jade -> Sorting the components")
 
     A = pinv(B)
     
@@ -334,7 +333,7 @@ def jadeR(X, m=None, verbose=False):
     # % Is this smart ?
     B = B[::-1,:]
 
-    if verbose: print "jade -> Fixing the signs"
+    if verbose: print("jade -> Fixing the signs")
     b = B[:,0]
     # just a trick to deal with sign == 0
     signs = array(sign(sign(b)+0.1).T)[0]
@@ -534,12 +533,12 @@ def main(argv=None):
         try:
             opts, args = getopt.getopt(argv[1:], "f:hm:o:st",
                     ["format=","help","m=","outputfile=","silent","transpose"])
-        except getopt.error, msg:
-            raise Usage(msg)
-    except Usage, err:
-        print >>sys.stderr, err.msg
-        print >>sys.stderr, "for help use --help"
-        return 2
+        except getopt.GetoptError as err:
+            raise Usage(err)
+    except Usage as err:
+        sys.stderr.write(err.msg)
+        sys.stderr.write("for help use --help\n")
+        sys.exit(2)
 
     format = 'txt'          # default
     m = None                # default
@@ -550,59 +549,57 @@ def main(argv=None):
     try:
         for o, a in opts:
             if o in ("-h", "--help"):
-                print main.__doc__
+                print(main.__doc__)
                 sys.exit(0)
             elif o in ("-f", "--format"):
                 if a not in ('txt'):
-                    raise Usage("'%s' is not a valid input format" % a)
+                    raise Usage("'%s' is not a valid input format\n" % a)
                 else:
                     format = a
             elif o in ("-m", "--m"):
                 try:
                     m = int(a)
                 except:
-                    raise Usage("m should be an integer")
+                    raise Usage("m should be an integer\n")
             elif o in ("-o", "--outputfile"):
                 outputfilename = a
             elif o in ("-s", "--silent"):
                 verbose = False
             elif o in ("-t", "--transpose"):
                 transpose = True
-
         if len(args) != 1:
-            raise Usage("please provide one and only one input file to process")
+            raise Usage("please provide one and only one input file to "
+                        "process\n")
         if not os.path.isfile(args[0]):
-            raise Usage("%s is not a valid file name" % args[0])
+            raise Usage("%s is not a valid file name\n" % args[0])
         filename = args[0]
         # determine output filename
         if outputfilename == None: # user didn't provide it
             outputfilename = filename.split('.')[0] + '_jade' + '.txt'
         if os.path.exists(outputfilename):
-            raise Usage("file %s already exists, bailing out" % outputfilename)
-
-    except Usage, err:
-        print >>sys.stderr, err.msg
-        print >>sys.stderr, "for help use --help"
-        return 2
-
+            raise Usage("file %s already exists, bailing out\n" % outputfilename)
+    except Usage as err:
+        sys.stderr.write(err.msg)
+        sys.stderr.write("for help use --help\n")
+        sys.exit(2)
     if format == 'txt':
         # we assume sensors (n) are in columns and samples (T) in rows
-        if verbose: print "loading data from text file..."
+        if verbose: print("loading data from text file...")
         X = loadtxt(filename)
         # loadtxt loads the data samples x sensors...
         if transpose == False:
            X = X.T
         if verbose:
-            print "finished; found %d sensors, each having %d samples.\n" \
-                  % (X.shape[0],X.shape[1])
+            print("finished; found %d sensors, each having %d samples.\n" \
+                  % (X.shape[0],X.shape[1]))
         
-        B = jadeR(X=X, m=m, verbose=verbose)
+        B = jader(X=X, m=m, verbose=verbose)
         Y =  B * matrix(X)
 
         if verbose:
-            print "\nsaving results to text file '%s' ..." % outputfilename
+            print("\nsaving results to text file '%s' ..." % outputfilename)
         savetxt(outputfilename, Y.T)
-        if verbose: print "finished!"
+        if verbose: print("finished!")
 
 if __name__ == "__main__":
     sys.exit(main())
